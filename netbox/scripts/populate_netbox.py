@@ -40,24 +40,95 @@ def main():
     # 3. Device Types
     if cisco:
         create_if_not_exists(nb.dcim.device_types, manufacturer=cisco.id, model="CSR1000v", slug="csr1000v", u_height=1)
+        create_if_not_exists(nb.dcim.device_types, manufacturer=cisco.id, model="Catalyst 9300", slug="catalyst-9300", u_height=1)
+        create_if_not_exists(nb.dcim.device_types, manufacturer=cisco.id, model="ASA 5506-X", slug="asa-5506-x", u_height=1)
     if juniper:
         create_if_not_exists(nb.dcim.device_types, manufacturer=juniper.id, model="vSRX", slug="vsrx", u_height=1)
+        create_if_not_exists(nb.dcim.device_types, manufacturer=juniper.id, model="EX4300", slug="ex4300", u_height=1)
 
     # 4. Device Roles
     role_core = create_if_not_exists(nb.dcim.device_roles, name="Core Router", slug="core-router", color="ff0000")
     role_access = create_if_not_exists(nb.dcim.device_roles, name="Access Switch", slug="access-switch", color="00ff00")
+    role_firewall = create_if_not_exists(nb.dcim.device_roles, name="Firewall", slug="firewall", color="ff9900")
+    role_dist = create_if_not_exists(nb.dcim.device_roles, name="Distribution Switch", slug="distribution-switch", color="0066ff")
 
     # 5. Devices
-    # Need to fetch IDs again to be sure
+    # Fetch device types and roles
     dt_csr = nb.dcim.device_types.get(slug="csr1000v")
+    dt_catalyst = nb.dcim.device_types.get(slug="catalyst-9300")
+    dt_asa = nb.dcim.device_types.get(slug="asa-5506-x")
+    dt_vsrx = nb.dcim.device_types.get(slug="vsrx")
+    dt_ex4300 = nb.dcim.device_types.get(slug="ex4300")
+    
     role_core = nb.dcim.device_roles.get(slug="core-router")
+    role_access = nb.dcim.device_roles.get(slug="access-switch")
+    role_firewall = nb.dcim.device_roles.get(slug="firewall")
+    role_dist = nb.dcim.device_roles.get(slug="distribution-switch")
     site_dc_a = nb.dcim.sites.get(slug="dc-a")
 
+    # Core Routers
     if dt_csr and role_core and site_dc_a:
         create_if_not_exists(nb.dcim.devices, 
                              name="core-rtr-01", 
                              device_type=dt_csr.id, 
                              role=role_core.id, 
+                             site=site_dc_a.id,
+                             status="active")
+        create_if_not_exists(nb.dcim.devices, 
+                             name="core-rtr-02", 
+                             device_type=dt_csr.id, 
+                             role=role_core.id, 
+                             site=site_dc_a.id,
+                             status="active")
+
+    # Distribution Switches
+    if dt_catalyst and role_dist and site_dc_a:
+        create_if_not_exists(nb.dcim.devices, 
+                             name="dist-sw-01", 
+                             device_type=dt_catalyst.id, 
+                             role=role_dist.id, 
+                             site=site_dc_a.id,
+                             status="active")
+        create_if_not_exists(nb.dcim.devices, 
+                             name="dist-sw-02", 
+                             device_type=dt_catalyst.id, 
+                             role=role_dist.id, 
+                             site=site_dc_a.id,
+                             status="active")
+
+    # Access Switches
+    if dt_ex4300 and role_access and site_dc_a:
+        create_if_not_exists(nb.dcim.devices, 
+                             name="access-sw-01", 
+                             device_type=dt_ex4300.id, 
+                             role=role_access.id, 
+                             site=site_dc_a.id,
+                             status="active")
+        create_if_not_exists(nb.dcim.devices, 
+                             name="access-sw-02", 
+                             device_type=dt_ex4300.id, 
+                             role=role_access.id, 
+                             site=site_dc_a.id,
+                             status="active")
+        create_if_not_exists(nb.dcim.devices, 
+                             name="access-sw-03", 
+                             device_type=dt_ex4300.id, 
+                             role=role_access.id, 
+                             site=site_dc_a.id,
+                             status="active")
+
+    # Firewalls
+    if dt_asa and role_firewall and site_dc_a:
+        create_if_not_exists(nb.dcim.devices, 
+                             name="fw-perimeter-01", 
+                             device_type=dt_asa.id, 
+                             role=role_firewall.id, 
+                             site=site_dc_a.id,
+                             status="active")
+        create_if_not_exists(nb.dcim.devices, 
+                             name="fw-internal-01", 
+                             device_type=dt_asa.id, 
+                             role=role_firewall.id, 
                              site=site_dc_a.id,
                              status="active")
 

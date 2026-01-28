@@ -37,6 +37,28 @@ def list_sites() -> str:
         return f"Error: {str(e)}"
 
 @mcp.tool()
+def list_devices() -> str:
+    """List all devices in NetBox."""
+    logger.info("list_devices called")
+    try:
+        logger.debug("Fetching devices from NetBox...")
+        devices = nb.dcim.devices.all()
+        result = []
+        for device in devices:
+            result.append({
+                "name": device.name,
+                "device_type": str(device.device_type) if device.device_type else "",
+                "role": str(device.role) if device.role else "",
+                "site": str(device.site) if device.site else "",
+                "status": str(device.status) if device.status else "unknown"
+            })
+        logger.info(f"Found {len(result)} devices")
+        return json.dumps(result)
+    except Exception as e:
+        logger.error(f"Error in list_devices: {e}")
+        return f"Error: {str(e)}"
+
+@mcp.tool()
 def get_ip_address(address: str) -> str:
     """Get IP address details."""
     try:

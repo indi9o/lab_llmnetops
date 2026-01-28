@@ -4,6 +4,25 @@ Dokumentasi perubahan dan perbaikan pada proyek Lab LLM NetOps.
 
 ---
 
+## [2026-01-28] Enhancements: Security, Tools, & Data
+
+### Security & Configuration
+- Migrasi konfigurasi sensitif (Token, URL) dari `docker-compose.yml` ke file `.env` terpisah untuk service `netbox-mcp` dan `llm-client`.
+- Menambahkan template `.env.example` untuk kemudahan setup.
+- Menambahkan file `.env` ke `.gitignore`.
+
+### Features (LLM Client & MCP)
+- **New Tool**: Menambahkan `list_devices` di `netbox-mcp` untuk mengambil daftar device lengkap.
+- **System Prompt Update**:
+  - Menambahkan instruksi **Wajib Bahasa Indonesia**.
+  - Menambahkan **Strict Rules** untuk mencegah halusinasi (data fabrication).
+  - Mendaftarkan tool `list_devices` ke dalam prompt.
+
+### Data
+- Update `netbox/scripts/populate_netbox.py` dengan variasi device yang lebih lengkap (Cisco CSR, Catalyst, ASA; Juniper vSRX, EX4300) dan role baru (Firewall, Distribution Switch).
+
+---
+
 ## [2026-01-28] Fix: SSE Connection Timeout pada LLM Client
 
 ### Masalah

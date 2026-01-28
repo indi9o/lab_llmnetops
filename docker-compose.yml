@@ -37,9 +37,8 @@ services:
       - netbox
     ports:
       - "38001:8000"
-    environment:
-      - NETBOX_URL=http://netbox:8080
-      - NETBOX_TOKEN=MK7knYb9991ZScuKIeACcsVCVifdBvbhIR4wzaaw
+    env_file:
+      - netbox-mcp/.env
     restart: unless-stopped
 
   llm-client:
@@ -47,10 +46,8 @@ services:
     depends_on:
       - netbox-mcp
     network_mode: "host"
-    environment:
-      - MCP_SERVER_URL=http://127.0.0.1:38001/sse
-      - OLLAMA_HOST=http://rogbox.local.id:11434
-      - MODEL_NAME=llama3.1
+    env_file:
+      - llm-client/.env
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     
