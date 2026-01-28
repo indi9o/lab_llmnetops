@@ -1,0 +1,20 @@
+# Data directories (Docker volumes)
+netbox/data/
+
+# Virtual environment
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Environment files with secrets
+netbox/env/*.env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db

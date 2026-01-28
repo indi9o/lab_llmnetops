@@ -1,0 +1,83 @@
+version: '3.4'
+
+services:
+  netbox:
+    image: netboxcommunity/netbox:latest
+    depends_on:
+      - postgres
+      - redis
+      - redis-cache
+    ports:
+      - 8082:8080
+    env_file:
+      - netbox/env/netbox.env
+    volumes:
+      - ./netbox/data/media:/opt/netbox/netbox/media
+    restart: unless-stopped
+
+  netbox-worker:
+    image: netboxcommunity/netbox:latest
+    command: /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py rqworker
+    depends_on:
+      - netbox
+    env_file:
+      - netbox/env/netbox.env
+    restart: unless-stopped
+
+  netbox-housekeeping:
+    image: netboxcommunity/netbox:latest
+    command: /opt/netbox/housekeeping.sh
+    depends_on:
+      - netbox
+    env_file:
+      - netbox/env/netbox.env
+    restart: unless-stopped
+
+  netbox-mcp:
+    build: ./netbox-mcp
+    depends_on:
+      - netbox
+    ports:
+      - "8001:8000"
+    environment:
+      - NETBOX_URL=http://netbox:8080
+      - NETBOX_TOKEN=1234567890123456789012345678901234567890
+    restart: unless-stopped
+
+  llm-client:
+    build: ./llm-client
+    depends_on:
+      - netbox-mcp
+    network_mode: "host"
+    environment:
+      - MCP_SERVER_URL=http://127.0.0.1:8001/sse
+      - OLLAMA_HOST=http://rogbox.local.id:11434
+      - MODEL_NAME=llama3.1
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    
+  postgres:
+    image: postgres:15-alpine
+    env_file:
+      - netbox/env/postgres.env
+    volumes:
+      - ./netbox/data/postgres:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: sh -c 'redis-server --appendonly yes --requirepass $$REDIS_PASSWORD'
+    env_file:
+      - netbox/env/redis.env
+    volumes:
+      - ./netbox/data/redis:/data
+    restart: unless-stopped
+
+  redis-cache:
+    image: redis:7-alpine
+    command: sh -c 'redis-server --requirepass $$REDIS_PASSWORD'
+    env_file:
+      - netbox/env/redis.env
+    volumes:
+      - ./netbox/data/redis-cache:/data
+    restart: unless-stopped
