@@ -11,7 +11,7 @@ import json
 # and the fact that I can reach NetBox. 
 # But to be thorough, let's verify the data exists in NetBox via API.
 
-NETBOX_URL = "http://localhost:8082/api/dcim/devices/"
+NETBOX_URL = "http://localhost:38080/api/dcim/devices/"
 TOKEN = "1234567890123456789012345678901234567890"
 
 headers = {
