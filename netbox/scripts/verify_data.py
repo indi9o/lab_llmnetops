@@ -12,7 +12,7 @@ import json
 # But to be thorough, let's verify the data exists in NetBox via API.
 
 NETBOX_URL = "http://localhost:38080/api/dcim/devices/"
-TOKEN = "1234567890123456789012345678901234567890"
+TOKEN = "MK7knYb9991ZScuKIeACcsVCVifdBvbhIR4wzaaw"
 
 headers = {
     "Authorization": f"Token {TOKEN}",

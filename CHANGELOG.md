@@ -4,6 +4,37 @@ Dokumentasi perubahan dan perbaikan pada proyek Lab LLM NetOps.
 
 ---
 
+## [2026-01-28] Fix: SSE Connection Timeout pada LLM Client
+
+### Masalah
+Error saat menjalankan `run_client.sh`:
+```
+httpx.RemoteProtocolError: peer closed connection without sending complete message body
+Error: Connection closed
+```
+
+### Penyebab
+SSE connection timeout karena blocking `input()` call. Koneksi SSE di-maintain dalam satu async context, tapi timeout saat menunggu user input.
+
+### Solusi
+Refactored `llm-client/src/client.py`:
+- Memisahkan fungsi `get_available_tools()` dan `call_mcp_tool()` 
+- Fresh SSE connection setiap tool call (reconnect pattern)
+- Menggunakan sync loop dengan `asyncio.run()` per operation
+
+### File yang Diubah
+- `llm-client/src/client.py` - Refactored connection handling
+- `netbox-mcp/src/server.py` - Ditambahkan logging dan `json.dumps()` serialization
+
+### Status
+✅ Selesai - LLM Client berhasil memanggil tools NetBox
+
+---
+
+Dokumentasi perubahan dan perbaikan pada proyek Lab LLM NetOps.
+
+---
+
 ## [2026-01-28] Fix: API Token Peppers Configuration
 
 ### Masalah

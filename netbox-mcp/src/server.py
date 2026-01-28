@@ -1,6 +1,12 @@
 import os
+import json
+import logging
 import pynetbox
 from mcp.server.fastmcp import FastMCP
+
+# Setup logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 # Configuration
 NETBOX_URL = os.getenv("NETBOX_URL", "http://netbox:8080")
@@ -44,7 +50,9 @@ def get_ip_address(address: str) -> str:
 @mcp.tool()
 def list_ip_addresses() -> str:
     """List all IP addresses in NetBox."""
+    logger.info("list_ip_addresses called")
     try:
+        logger.debug("Fetching IP addresses from NetBox...")
         ips = nb.ipam.ip_addresses.all()
         result = []
         for ip in ips:
@@ -53,8 +61,10 @@ def list_ip_addresses() -> str:
                 "description": ip.description or "",
                 "status": str(ip.status) if ip.status else "unknown"
             })
-        return str(result)
+        logger.info(f"Found {len(result)} IP addresses")
+        return json.dumps(result)
     except Exception as e:
+        logger.error(f"Error in list_ip_addresses: {e}")
         return f"Error: {str(e)}"
 
 if __name__ == "__main__":

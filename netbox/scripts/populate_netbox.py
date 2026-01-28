@@ -3,7 +3,7 @@ import os
 
 # Configuration
 NETBOX_URL = "http://localhost:38080"
-NETBOX_TOKEN = "1234567890123456789012345678901234567890"
+NETBOX_TOKEN = "MK7knYb9991ZScuKIeACcsVCVifdBvbhIR4wzaaw"
 
 nb = pynetbox.api(NETBOX_URL, token=NETBOX_TOKEN)
 

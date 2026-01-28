@@ -39,7 +39,7 @@ services:
       - "38001:8000"
     environment:
       - NETBOX_URL=http://netbox:8080
-      - NETBOX_TOKEN=1234567890123456789012345678901234567890
+      - NETBOX_TOKEN=MK7knYb9991ZScuKIeACcsVCVifdBvbhIR4wzaaw
     restart: unless-stopped
 
   llm-client:
