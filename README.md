@@ -75,7 +75,7 @@ sequenceDiagram
    
    Generate `API_TOKEN_PEPPERS` (random string dalam format JSON array):
    ```bash
-   python3 -c "import secrets; print('[\"' + secrets.token_urlsafe(32) + '\"]')"
+   python3 -c "import secrets,json; print(json.dumps([secrets.token_urlsafe(32)]))"
    ```
    Copy hasil generate ke `netbox/env/netbox.env`.
 
