@@ -61,21 +61,39 @@ sequenceDiagram
    cp netbox/env/redis.env.example netbox/env/redis.env
    ```
 
-2. **Edit konfigurasi**
-   - Update `docker-compose.yml` dengan alamat Ollama server Anda
-   - Sesuaikan env files sesuai kebutuhan
+2. **Generate secret keys**
+   
+   Generate `SECRET_KEY` (50 karakter random):
+   ```bash
+   python3 -c "import secrets; print(secrets.token_urlsafe(50))"
+   ```
+   
+   Generate `FIELD_ENCRYPTION_KEY` (64 karakter hex):
+   ```bash
+   python3 -c "import secrets; print(secrets.token_hex(32))"
+   ```
+   
+   Generate `API_TOKEN_PEPPERS` (random string dalam format JSON array):
+   ```bash
+   python3 -c "import secrets; print('[\"' + secrets.token_urlsafe(32) + '\"]')"
+   ```
+   Copy hasil generate ke `netbox/env/netbox.env`.
 
-3. **Jalankan services**
+3. **Edit konfigurasi**
+   - Update `docker-compose.yml` dengan alamat Ollama server Anda
+   - Sesuaikan password di env files sesuai kebutuhan
+
+4. **Jalankan services**
    ```bash
    docker compose up -d
    ```
 
-4. **Populate data sample** (opsional)
+5. **Populate data sample** (opsional)
    ```bash
    python netbox/scripts/populate_netbox.py
    ```
 
-5. **Jalankan LLM Client**
+6. **Jalankan LLM Client**
    ```bash
    cd llm-client && ./run_client.sh
    ```
