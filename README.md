@@ -2,6 +2,17 @@
 
 Lab environment untuk demonstrasi integrasi LLM dengan NetBox menggunakan Model Context Protocol (MCP).
 
+## Apa itu?
+
+### NetBox
+[NetBox](https://netbox.dev/) adalah aplikasi open-source untuk dokumentasi dan manajemen infrastruktur jaringan. NetBox menyediakan model data untuk IP addresses, VLANs, racks, devices, circuits, dan lainnya via Web atau REST API.
+
+### LLM (Large Language Model)
+LLM adalah model AI yang dapat memahami dan menghasilkan teks natural language. Dalam project ini, kita menggunakan [Ollama](https://ollama.ai/) sebagai runtime untuk menjalankan model seperti `llama3.1` yang mendukung **tool calling** - kemampuan LLM untuk memanggil fungsi eksternal.
+
+### MCP (Model Context Protocol)
+[MCP](https://modelcontextprotocol.io/) adalah protokol standar yang dikembangkan oleh Anthropic untuk menghubungkan LLM dengan sumber data eksternal. MCP memungkinkan LLM mengakses tools dan resources secara terstruktur via transport seperti SSE (Server-Sent Events).
+
 ## Arsitektur
 
 ```mermaid
