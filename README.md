@@ -62,22 +62,10 @@ sequenceDiagram
    ```
 
 2. **Generate secret keys**
-   
-   Generate `SECRET_KEY` (50 karakter random):
    ```bash
-   python3 -c "import secrets; print(secrets.token_urlsafe(50))"
+   ./generate_secrets.sh
    ```
-   
-   Generate `FIELD_ENCRYPTION_KEY` (64 karakter hex):
-   ```bash
-   python3 -c "import secrets; print(secrets.token_hex(32))"
-   ```
-   
-   Generate `API_TOKEN_PEPPERS` (random string dalam format JSON array):
-   ```bash
-   python3 -c "import secrets,json; print(json.dumps([secrets.token_urlsafe(32)]))"
-   ```
-   Copy hasil generate ke `netbox/env/netbox.env`.
+   Copy hasil output ke `netbox/env/netbox.env`.
 
 3. **Edit konfigurasi**
    - Update `docker-compose.yml` dengan alamat Ollama server Anda
