@@ -56,25 +56,32 @@ sequenceDiagram
    ```bash
    git clone <repo-url>
    cd lab_llmnetops
-   cp netbox/env/netbox.env.example netbox/env/netbox.env
-   cp netbox/env/postgres.env.example netbox/env/postgres.env
-   cp netbox/env/redis.env.example netbox/env/redis.env
+   cp .env.example .env
    ```
 
 2. **Generate secret keys**
+   Jalankan script `generate_secrets.sh` untuk menghasilkan secure keys:
    ```bash
    ./generate_secrets.sh
    ```
-   Copy hasil output ke `netbox/env/netbox.env`.
+   Script ini akan menghasilkan:
+   - `SECRET_KEY`
+   - `FIELD_ENCRYPTION_KEY`
+   - `API_TOKEN_PEPPER_1`
+   
+   Copy nilai yang dihasilkan ke dalam file `.env`.
 
 3. **Edit konfigurasi**
-   - Update `docker-compose.yml` dengan alamat Ollama server Anda
-   - Sesuaikan password di env files sesuai kebutuhan
+   Edit `.env` dan sesuaikan variabel berikut:
+   - `DB_PASSWORD` & `POSTGRES_PASSWORD` (harus sama)
+   - `REDIS_PASSWORD`
+   - `OLLAMA_HOST` (alamat server Ollama Anda)
 
 4. **Jalankan services**
    ```bash
    docker compose up -d
    ```
+   Tunggu hingga semua services berstatus `healthy` (cek dengan `docker compose ps`).
 
 5. **Populate data sample** (opsional)
    ```bash
@@ -83,7 +90,7 @@ sequenceDiagram
 
 6. **Jalankan LLM Client**
    ```bash
-   cd llm-client && ./run_client.sh
+   ./llm-client/run_client.sh
    ```
 
 ## Struktur Project
@@ -91,34 +98,18 @@ sequenceDiagram
 ```
 lab_llmnetops/
 ├── docker-compose.yml
+├── .env                # Unified configuration
+├── .env.example
 ├── llm-client/           # LLM chat client
 │   ├── Dockerfile
 │   ├── run_client.sh
 │   └── src/client.py
 ├── netbox/               # Konfigurasi & data NetBox
-│   ├── env/              # Environment files
 │   ├── data/             # Persistent storage (gitignored)
 │   └── scripts/          # Helper scripts
 └── netbox-mcp/           # MCP server untuk NetBox
     ├── Dockerfile
     └── src/server.py
-```
-
-## Konfigurasi
-
-### Ollama Server
-Update `OLLAMA_HOST` di `docker-compose.yml`:
-```yaml
-environment:
-  - OLLAMA_HOST=http://alamat-ollama-anda:11434
-  - MODEL_NAME=llama3.1
-```
-
-### NetBox Token
-Generate token di NetBox Admin panel dan update di `docker-compose.yml`:
-```yaml
-environment:
-  - NETBOX_TOKEN=token-anda-disini
 ```
 
 ## Contoh Penggunaan
