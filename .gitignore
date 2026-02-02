@@ -8,9 +8,13 @@ __pycache__/
 *.pyc
 
 # Environment files with secrets
-netbox/env/*.env
-netbox-mcp/.env
-llm-client/.env
+.env
+!.env.example
+
+# Legacy environment paths (safekeeping)
+# netbox/env/
+# netbox-mcp/.env
+# llm-client/.env
 
 # IDE
 .idea/

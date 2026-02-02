@@ -8,7 +8,7 @@ services:
     ports:
       - 38080:8080
     env_file:
-      - netbox/env/netbox.env
+      - .env
     volumes:
       - ./netbox/data/media:/opt/netbox/netbox/media
     healthcheck:
@@ -26,7 +26,7 @@ services:
       netbox:
         condition: service_healthy
     env_file:
-      - netbox/env/netbox.env
+      - .env
     healthcheck:
       test: ["CMD-SHELL", "ps -aux | grep rqworker || exit 1"]
       interval: 30s
@@ -42,7 +42,7 @@ services:
       netbox:
         condition: service_healthy
     env_file:
-      - netbox/env/netbox.env
+      - .env
     healthcheck:
       test: ["CMD-SHELL", "ps -aux | grep housekeeping || exit 1"]
       interval: 30s
@@ -59,7 +59,7 @@ services:
     ports:
       - "38001:8000"
     env_file:
-      - netbox-mcp/.env
+      - .env
     healthcheck:
       test: ["CMD-SHELL", "python -c 'import socket,sys; s=socket.socket(socket.AF_INET, socket.SOCK_STREAM); s.connect((\"localhost\", 8000)); sys.exit(0)'"]
       interval: 30s
@@ -74,14 +74,14 @@ services:
       - netbox-mcp
     network_mode: "host"
     env_file:
-      - llm-client/.env
+      - .env
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     
   postgres:
     image: postgres:15-alpine
     env_file:
-      - netbox/env/postgres.env
+      - .env
     volumes:
       - ./netbox/data/postgres:/var/lib/postgresql/data
     healthcheck:
@@ -96,7 +96,7 @@ services:
     image: redis:7-alpine
     command: sh -c 'redis-server --appendonly yes --requirepass $$REDIS_PASSWORD'
     env_file:
-      - netbox/env/redis.env
+      - .env
     volumes:
       - ./netbox/data/redis:/data
     healthcheck:
@@ -111,7 +111,7 @@ services:
     image: redis:7-alpine
     command: sh -c 'redis-server --requirepass $$REDIS_PASSWORD'
     env_file:
-      - netbox/env/redis.env
+      - .env
     volumes:
       - ./netbox/data/redis-cache:/data
     healthcheck:
