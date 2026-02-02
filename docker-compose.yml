@@ -11,34 +11,61 @@ services:
       - netbox/env/netbox.env
     volumes:
       - ./netbox/data/media:/opt/netbox/netbox/media
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/login/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
     restart: unless-stopped
 
   netbox-worker:
     image: netboxcommunity/netbox:latest
     command: /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py rqworker
     depends_on:
-      - netbox
+      netbox:
+        condition: service_healthy
     env_file:
       - netbox/env/netbox.env
+    healthcheck:
+      test: ["CMD-SHELL", "ps -aux | grep rqworker || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
     restart: unless-stopped
 
   netbox-housekeeping:
     image: netboxcommunity/netbox:latest
-    command: /opt/netbox/housekeeping.sh
+    command: sh -c "while true; do /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py housekeeping; sleep 86400; done"
     depends_on:
-      - netbox
+      netbox:
+        condition: service_healthy
     env_file:
       - netbox/env/netbox.env
+    healthcheck:
+      test: ["CMD-SHELL", "ps -aux | grep housekeeping || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
     restart: unless-stopped
 
   netbox-mcp:
     build: ./netbox-mcp
     depends_on:
-      - netbox
+      netbox:
+        condition: service_healthy
     ports:
       - "38001:8000"
     env_file:
       - netbox-mcp/.env
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import socket,sys; s=socket.socket(socket.AF_INET, socket.SOCK_STREAM); s.connect((\"localhost\", 8000)); sys.exit(0)'"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
     restart: unless-stopped
 
   llm-client:
@@ -57,6 +84,12 @@ services:
       - netbox/env/postgres.env
     volumes:
       - ./netbox/data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     restart: unless-stopped
 
   redis:
@@ -66,6 +99,12 @@ services:
       - netbox/env/redis.env
     volumes:
       - ./netbox/data/redis:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a $$REDIS_PASSWORD ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     restart: unless-stopped
 
   redis-cache:
@@ -75,4 +114,10 @@ services:
       - netbox/env/redis.env
     volumes:
       - ./netbox/data/redis-cache:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a $$REDIS_PASSWORD ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     restart: unless-stopped
