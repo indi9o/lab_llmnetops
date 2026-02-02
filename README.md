@@ -17,11 +17,17 @@ LLM adalah model AI yang dapat memahami dan menghasilkan teks natural language. 
 
 ```mermaid
 sequenceDiagram
-    participant User
-    participant LLM Client
-    participant Ollama
-    participant NetBox MCP
-    participant NetBox
+    actor User
+    box "App Layer" #e6f3ff
+        participant LLM Client
+    end
+    box "AI Engine" #e6ffe6
+        participant Ollama
+    end
+    box "Data Layer" #fff0e6
+        participant NetBox MCP
+        participant NetBox
+    end
 
     User->>LLM Client: "list all sites"
     LLM Client->>Ollama: Chat request + tools
