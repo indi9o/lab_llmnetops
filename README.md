@@ -90,7 +90,16 @@ sequenceDiagram
    Tunggu hingga semua services berstatus `healthy` (cek dengan `docker compose ps`).
 
 5. **Populate data sample** (opsional)
+   Untuk menjalankan script `populate_netbox.py`, buat virtual environment dan install dependencies-nya terlebih dahulu:
    ```bash
+   # Buat dan aktifkan venv
+   python3 -m venv .venv
+   source .venv/bin/activate
+
+   # Install pynetbox
+   pip install pynetbox
+
+   # Jalankan script
    python netbox/scripts/populate_netbox.py
    ```
 
