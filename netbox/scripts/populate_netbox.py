@@ -180,6 +180,27 @@ def main():
         except Exception as e:
             print(f"Error creating IP {ip_data['address']}: {e}")
 
+    # 8. VLANs
+    print("\n--- Adding VLANs ---")
+    vlans = [
+        {"vid": 10, "name": "VLAN-Management", "status": "active", "description": "Management VLAN"},
+        {"vid": 20, "name": "VLAN-Servers", "status": "active", "description": "Server VLAN"},
+        {"vid": 30, "name": "VLAN-Users", "status": "active", "description": "User VLAN"},
+        {"vid": 100, "name": "VLAN-Guest", "status": "active", "description": "Guest WiFi VLAN"},
+        {"vid": 999, "name": "VLAN-Native", "status": "active", "description": "Native/Trunk VLAN"},
+    ]
+    
+    for vlan_data in vlans:
+        try:
+            existing = nb.ipam.vlans.get(vid=vlan_data["vid"])
+            if existing:
+                print(f"Skipping VLAN {vlan_data['vid']}: Already exists")
+            else:
+                created = nb.ipam.vlans.create(vlan_data)
+                print(f"Created VLAN: {vlan_data['vid']} - {vlan_data['name']}")
+        except Exception as e:
+            print(f"Error creating VLAN {vlan_data['vid']}: {e}")
+
     print("\nPopulation complete.")
 
 if __name__ == "__main__":

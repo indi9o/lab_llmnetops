@@ -4,6 +4,49 @@ Dokumentasi perubahan dan perbaikan pada proyek Lab LLM NetOps.
 
 ---
 
+## [2026-02-02] Feature: Topology Documentation Generation
+
+### Features
+- **New MCP Tool**: `generate_topology` - Menghasilkan data topologi lengkap termasuk:
+  - Devices grouped by role (Access, Core, Distribution, Firewall)
+  - Network segments dengan IP count
+  - VLAN list
+  - Topology layers (Perimeter, Core, Distribution, Access, Security)
+  - **Mermaid diagram** siap pakai untuk visualisasi topologi
+
+- **New MCP Tools**: `list_prefixes`, `get_prefix`, `list_vlans` untuk subnet utilization dan VLAN reporting
+
+- **Use Cases Document**: Ditambahkan `docs/USE_CASES.md` dengan 6 skenario dokumentasi jaringan:
+  - Infrastructure Summary
+  - IP Address Inventory
+  - Device Inventory per Site
+  - Network Status Check
+  - Subnet Utilization Report
+  - **Network Topology Diagram with Documentation**
+
+### Improvements
+- **LLM Client Fallback Parser**: Menangani JSON tool calls dari model yang output teks alih-alih proper tool calls
+- **System Prompt Enhancement**: Instruksi untuk Mermaid diagram generation
+- **Sample Data**: Ditambahkan VLAN data di `populate_netbox.py`
+
+### Bug Fixes
+- Fixed `AttributeError` pada `list_prefixes` dan `get_prefix` saat `site` attribute missing
+
+### Configuration
+- Consolidated environment files ke root `.env`
+- Updated `.gitignore` untuk ignore root `.env`, allow `.env.example`
+- Added health checks ke semua services di `docker-compose.yml`
+
+### Files Modified
+- `netbox-mcp/src/server.py` - New tools dan Mermaid generation
+- `llm-client/src/client.py` - Updated prompt dan fallback parser
+- `docs/USE_CASES.md` - New documentation
+- `netbox/scripts/populate_netbox.py` - VLAN data
+- `docker-compose.yml` - Health checks
+- `README.md` - Updated documentation
+
+---
+
 ## [2026-01-28] Enhancements: Security, Tools, & Data
 
 ### Security & Configuration

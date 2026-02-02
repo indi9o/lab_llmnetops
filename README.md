@@ -47,9 +47,16 @@ sequenceDiagram
 - **LLM Client**: Interface chat menggunakan Ollama dengan dukungan tool calling
 - **Tools yang tersedia**:
   - `list_sites` - Daftar semua sites
+  - `list_devices` - Daftar semua devices
   - `get_device` - Detail device berdasarkan nama
-  - `get_ip_address` - Detail IP address
   - `list_ip_addresses` - Daftar semua IP addresses
+  - `get_ip_address` - Detail IP address
+  - `list_prefixes` - Daftar semua prefix/subnet dengan info utilisasi
+  - `get_prefix` - Detail prefix tertentu
+  - `list_vlans` - Daftar semua VLANs
+  - `generate_topology` - Data topologi lengkap untuk dokumentasi dan diagram
+
+📄 **Lihat [Use Cases](docs/USE_CASES.md)** untuk contoh skenario dokumentasi jaringan.
 
 ## Prasyarat
 
@@ -138,6 +145,23 @@ Assistant: Berikut adalah daftar IP address yang ada di NetBox:
 
 User: get IP address 172.16.0.10
 Assistant: IP 172.16.0.10/24 adalah "Web Server" dengan status Active.
+
+User: buatkan dokumentasi jaringan untuk Data Center A
+Assistant: Berikut adalah ringkasan jaringan untuk Data Center A:
+
+**Prefixes:**
+- 10.0.0.0/24 (Management Network)
+- 172.16.0.0/24 (Server Network)
+- 192.168.1.0/24 (User Network)
+
+**Devices:**
+- **Core Router**: core-rtr-01, core-rtr-02
+- **Distribution Switch**: dist-sw-01, dist-sw-02
+- **Access Switch**: access-sw-01, access-sw-02, access-sw-03
+- **Firewall**: fw-perimeter-01, fw-internal-01
+
+Total perangkat: 8
+Total subnet: 3
 ```
 
 ## Lisensi
